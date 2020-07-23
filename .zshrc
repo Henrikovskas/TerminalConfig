@@ -1,8 +1,9 @@
-export LC_ALL=en_US.UTF-8 #mete a lingua do env em inglês para não dar erro com o vim
-set -o vi
-alias cdd='cd Desktop'
-alias python=python3
-unsetopt prompt_cr prompt_sp #Evita a cena de pôr um sinal de percentagem se a output tiver na mesma linha da command line
+export LC_ALL=en_US.UTF-8 #sets language to english to avoid conflicts with vim
 
-#% prompt='%/ %# '
+set -o vi #set terminal mode to vim
+alias cdd='cd Desktop'
+alias lss='ls -a -l'
+alias python=python3
+unsetopt prompt_cr prompt_sp #removes '%' if there is no '\n'
+
 prompt='%F{blue}%m%f:%F{yellow}%~%f: '
