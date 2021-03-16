@@ -1,1 +1,1 @@
-**tErMiNaL**
+*minimalist*™ tErMiNaL config
