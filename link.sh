@@ -1,17 +1,18 @@
-delete_files() {
-	if [[ $1 ]]; then
-		rm $HOME/$1
+link() {
+	if [[ -e; $1 ]]; then
+	  rm $HOME/$1
+    echo "Removed already present file $1."
 	fi
+  
+  ln -s $PWD/$1 $HOME/$1
+
+  if [[ -L $HOME/$1 ]]; then
+    echo "Linked $1."
+  else 
+    echo "Error: could not link $1."
+  fi
 }
 
-delete_files /.vimrc
-ln -s $PWD/.vimrc $HOME/.vimrc
-echo "linked vimrc"
-	
-delete_files /.zshrc
-ln -s $PWD/.zshrc $HOME/.zshrc
-echo "linked zshrc"
-
-delete_files /.tmux.conf
-ln -s $PWD/.tmux.conf $HOME/.tmux.conf
-echo "linked tmuxconf"
+link .vimrc
+link .zshrc
+link .tmux.conf

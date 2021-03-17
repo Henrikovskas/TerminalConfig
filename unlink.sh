@@ -1,6 +1,9 @@
-rm $HOME/.vimrc
-echo "removed vimrc"
-rm $HOME/.zshrc
-echo "removed zshrc"
-rm $HOME/.tmux.conf
-echo "removed tmuxconf"
+unlink() {
+  if rm $HOME/$1; then
+    echo "Removed $1."
+  fi
+}
+
+unlink .vimrc
+unlink .zshrc
+unlink .tmux.conf
