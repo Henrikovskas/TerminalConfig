@@ -26,7 +26,7 @@ map <Leader>h <C-w>h
 map <Leader>l <C-w>l
 "vnoremap <ESC> <C-c> "Remaps ctrl-c to esc to remove delay when exiting visual mode (causa um bug estranho)
 
-"set expandtab "converts tabs to spaces
+set expandtab "converts tabs to spaces
 set tabstop=2 "how many spaces in a tab
 set shiftwidth=2
 
