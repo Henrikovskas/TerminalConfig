@@ -1,5 +1,5 @@
 link() {
-	if [[ -e; $1 ]]; then
+	if [[ -e $HOME/$1 ]]; then
 	  rm $HOME/$1
     echo "Removed already present file $1."
 	fi
