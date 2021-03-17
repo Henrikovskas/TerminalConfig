@@ -28,7 +28,8 @@ map <Leader>l <C-w>l
 
 set expandtab "converts tabs to spaces
 set tabstop=2 "how many spaces in a tab
-set shiftwidth=2
+set shiftwidth=2 "for autoindent
+set softtabstop=2 "for when deleting
 
 set lazyredraw "for better performance
 
