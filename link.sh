@@ -13,8 +13,8 @@ link() {
 
 if [[ $OSTYPE == "darwin20" ]]; then
 	link .zshrc
-else
-	link .bashrc
 fi
+link .bashrc
+link .bash_profile
 link .screenrc
 link .vimrc

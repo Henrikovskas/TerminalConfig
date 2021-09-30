@@ -6,9 +6,7 @@ unlink() {
 
 if [[ $OSTYPE == "darwin20" ]]; then
 	unlink .zshrc
-else
-	unlink .bashrc
 fi
-
+unlink .bashrc
 unlink .screenrc
 unlink .vimrc
