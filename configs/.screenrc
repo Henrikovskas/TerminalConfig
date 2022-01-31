@@ -1,5 +1,4 @@
 startup_message off
 bindkey "º" command
-shell "/bin/bash"
 
-hardstatus alwayslastline '%{= KW} %= %-Lw%n%f%{R}*%{W} %t%+Lw %= '
+hardstatus alwayslastline '%{= KW} %= %-Lw%n%f%{G}*%{W} %t%+Lw %= '

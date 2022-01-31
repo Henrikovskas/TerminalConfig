@@ -7,4 +7,4 @@ fi
 
 unset HISTFILE
 bind -x '"\C-l": clear'
-PS1="\e[1;32m\h\e[m:\e[1;32m\W\e[m\$ "
+PS1="\[\e[1;32m\h\e[m:\e[1;32m\W\e[m\$\] "
