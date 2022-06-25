@@ -1,0 +1,75 @@
+syntax on
+colorscheme default
+
+set backspace=indent,eol,start
+set mouse=a " for emergencies
+set autoindent
+set hlsearch
+set number
+set ruler
+set wrap
+
+set softtabstop=-1 " for when deleting " -1 to follow shiftwidth
+set shiftwidth=0 " for autoindent " 0 to follor tabstop
+set tabstop=2 " how many spaces in a tab
+set noexpandtab " converting between tabs and spaces
+
+map <SPACE> <Leader>
+map <Leader>w <C-w>w
+map <Leader>d "_d
+map <Leader>y "*y
+
+let g:go_highlight_trailing_whitespace_error=0
+
+if has('mac')
+	call plug#begin()
+	"let g:seoul256_background = 239
+	Plug 'junegunn/seoul256.vim'
+
+	Plug 'arcticicestudio/nord-vim'
+
+	let g:gruvbox_contrast_dark = 'soft'
+	set bg=dark
+	Plug 'morhetz/gruvbox'
+
+	let $FZF_DEFAULT_OPTS="--bind ctrl-u:preview-page-up,ctrl-d:preview-page-down,ctrl-k:preview-up,ctrl-j:preview-down"
+	Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+	Plug 'junegunn/fzf.vim'
+
+	Plug 'preservim/nerdtree'
+
+	"set signcolumn=number
+	Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+	Plug 'sheerun/vim-polyglot'
+	call plug#end()
+
+	map <Leader>f :Rg<CR>
+	map <Leader>p :Files<CR>
+	map <Leader>b :Buffers<CR>
+
+	map <silent> gd <Plug>(coc-definition)
+	map <silent> gt <Plug>(coc-type-definition)
+	map <silent> gi <Plug>(coc-implementation)
+	map <silent> gr <Plug>(coc-references)
+	map <leader>r <Plug>(coc-rename)
+
+	autocmd CursorHold * silent call CocActionAsync('highlight')
+
+	nnoremap <silent> K :call ShowDocumentation()<CR>
+	autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+
+	" auto complete with tab
+	inoremap <silent><expr> <tab> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<TAB>"
+	inoremap <silent><expr> <cr> "\<c-g>u\<CR>"
+
+	function! ShowDocumentation()
+		if CocAction('hasProvider', 'hover')
+			call CocActionAsync('doHover')
+		else
+			call feedkeys('K', 'in')
+		endif
+	endfunction
+	
+	colorscheme default
+endif

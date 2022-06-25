@@ -1,4 +1,5 @@
 startup_message off
-bindkey "º" command
+defscrollback 10000
+bindkey "º" command # default Ctrl-A
 
 hardstatus alwayslastline '%{= KW} %= %-Lw%n%f%{G}*%{W} %t%+Lw %= '
