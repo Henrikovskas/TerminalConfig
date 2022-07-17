@@ -22,6 +22,7 @@ unlink_all() {
 		unlink .zshrc
 		unlink .vim/coc-settings.json
 	fi
+	unlink .tmux.conf
 	unlink .bashrc
 	unlink .bash_profile
 	unlink .screenrc
@@ -33,6 +34,7 @@ link_all() {
 		link zshrc .zshrc
 		link coc-settings.json .vim/coc-settings.json
 	fi
+	link tmux.conf .tmux.conf
 	link bashrc .bashrc
 	link bash_profile .bash_profile
 	link screenrc .screenrc
@@ -47,7 +49,11 @@ which -s brew
 if [[ $OSTYPE == "darwin20" && $? != 0 ]]; then
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	brew install wget htop node bear go gopls fmt ripgrep rust rustfmt rustup-init tree cmake
+	brew install wget htop node bear go gopls fmt ripgrep rust rustfmt rustup-init tree cmake jq zig
+
+	# zls setup (zig)
+	mkdir $HOME/zls && cd $HOME/zls && curl -L https://github.com/zigtools/zls/releases/download/0.9.0/x86_64-macos.tar.xz | tar -xJ --strip-components=1 -C .
+	cd ~/zls && chmod +x zls
 
 	# Run manually in vim:
 	# :PlugInstall

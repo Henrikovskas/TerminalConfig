@@ -1,16 +1,17 @@
 syntax on
+set t_Co=256
 colorscheme default
 
 set backspace=indent,eol,start
-set mouse=a " for emergencies
+set mouse=a
 set autoindent
 set hlsearch
 set number
 set ruler
 set wrap
 
-set softtabstop=-1 " for when deleting " -1 to follow shiftwidth
-set shiftwidth=0 " for autoindent " 0 to follor tabstop
+set softtabstop=-1 " for when deleting (-1 to follow shiftwidth)
+set shiftwidth=0 " for autoindent (0 to follow tabstop)
 set tabstop=2 " how many spaces in a tab
 set noexpandtab " converting between tabs and spaces
 
@@ -38,7 +39,7 @@ if has('mac')
 
 	Plug 'preservim/nerdtree'
 
-	"set signcolumn=number
+	set signcolumn=number
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 	Plug 'sheerun/vim-polyglot'
@@ -52,6 +53,8 @@ if has('mac')
 	map <silent> gt <Plug>(coc-type-definition)
 	map <silent> gi <Plug>(coc-implementation)
 	map <silent> gr <Plug>(coc-references)
+	map <silent> ep <Plug>(coc-diagnostic-prev)
+	map <silent> en <Plug>(coc-diagnostic-next)
 	map <leader>r <Plug>(coc-rename)
 
 	autocmd CursorHold * silent call CocActionAsync('highlight')
@@ -71,5 +74,5 @@ if has('mac')
 		endif
 	endfunction
 	
-	colorscheme default
+	colorscheme nord
 endif
