@@ -1,64 +1,75 @@
+# check if this is MacOS
+[ "$OSTYPE" = "darwin20" ]
+mac=$?
+
+configs=("git-prompt.sh" "bashrc" "screenrc" "vimrc")
+test "$mac" && configs+=("zshrc" "bash_profile" "init.lua" "tmux.conf")
+
+get_link_path() {
+	if [ "$1" = "init.lua" ]; then
+		mkdir -p $HOME/.config/nvim
+		link_path="$HOME/.config/nvim/$1"
+	else
+		link_path="$HOME/.$1"
+	fi
+}
+
 unlink() {
-	if rm $HOME/$1; then
-		echo "Removed $1."
+	get_link_path $1
+
+	# checks if there's a link already
+	# (even if it points to an invalid file)
+	if [ -L "$link_path" ]; then
+		rm $link_path
+		echo "Unlinked $1"
+	else
+		echo "error: could not unlink $1"
 	fi
 }
 
 link() {
-	if [[ -e $HOME/$2 ]]; then
-		rm $HOME/$2
-		echo "Removed already present file $2."
-	fi
+	get_link_path $1
 
-	ln -s $PWD/configs/$1 $HOME/$2
+	ln -s $PWD/configs/$1 $link_path
 
-	if [[ $? == 0 && -L $HOME/$2 ]]; then
-		echo "Linked $1."
+	if [ -e "$link_path" ]; then
+		echo "Linked $1"
+	else
+		echo "error: could not link $1"
 	fi
 }
 
-unlink_all() {
-	if [[ $OSTYPE == "darwin20" ]]; then
-		unlink .zshrc
-		unlink .vim/coc-settings.json
+install_packer() {
+	if [ ! -d ~/.local/share/nvim/site/pack/packer/start/packer.nvim ]; then
+		git clone --depth 1 https://github.com/wbthomason/packer.nvim\
+		~/.local/share/nvim/site/pack/packer/start/packer.nvim
+		echo "Installed Packer"
 	fi
-	unlink .tmux.conf
-	unlink .bashrc
-	unlink .bash_profile
-	unlink .screenrc
-	unlink .vimrc
 }
 
-link_all() {
-	if [[ $OSTYPE == "darwin20" ]]; then
-		link zshrc .zshrc
-		link coc-settings.json .vim/coc-settings.json
+run() {
+	# relink everything
+	for config in "${configs[@]}"; do
+		unlink "$config"
+		link "$config"
+	done
+
+	test "$mac" && install_packer
+
+	# install homebrew and casks
+	which -s brew
+	if [ "$?" -ne 0 ] && [ "$mac" ]; then
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+		brew install\
+			go zig\
+			jq universal-ctags ripgrep screen tmux
+		brew install --cask\
+			rectangle
 	fi
-	link tmux.conf .tmux.conf
-	link bashrc .bashrc
-	link bash_profile .bash_profile
-	link screenrc .screenrc
-	link vimrc .vimrc
 }
 
-unlink_all
-link_all
-
-# check if it's first time setup and install required components
-which -s brew
-if [[ $OSTYPE == "darwin20" && $? != 0 ]]; then
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	brew install wget htop node bear go gopls fmt ripgrep rust rustfmt rustup-init tree cmake jq zig
-
-	# zls setup (zig)
-	mkdir $HOME/zls && cd $HOME/zls && curl -L https://github.com/zigtools/zls/releases/download/0.9.0/x86_64-macos.tar.xz | tar -xJ --strip-components=1 -C .
-	cd ~/zls && chmod +x zls
-
-	# Run manually in vim:
-	# :PlugInstall
-	# :CocInstall coc-clangd
-	# :CocCommand clangd.install
-	# :CocInstall coc-rust-analyzer
+if [ ! -z "$*" ]; then
+	"$@"
+else
+	run
 fi
-

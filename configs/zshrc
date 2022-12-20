@@ -1,7 +1,10 @@
 set -o vi
+
 alias ls="ls -G"
-alias python="python3"
-export PATH=/Downloads/apache-maven-3.8.4/bin:$PATH
-export PATH="/Users/henrique/Library/Python/3.9/bin:$PATH"
-#prompt='%F{green}%m%f » %F{green}%15>...>%c%>>%f » '
-prompt='%F{cyan}%#%f '
+alias py="python3"
+alias vi="nvim"
+alias screen="/usr/local/bin/screen"
+
+source ~/.git-prompt.sh
+setopt PROMPT_SUBST
+prompt='%B%F{cyan}%1d$(__git_ps1) %#%f%b '

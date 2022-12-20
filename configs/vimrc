@@ -1,78 +1,37 @@
 syntax on
-set t_Co=256
+set cc=100
 colorscheme default
 
 set backspace=indent,eol,start
 set mouse=a
-set autoindent
 set hlsearch
+set incsearch
 set number
 set ruler
-set wrap
+set nowrap
+set scrolloff=10
+"let g:mapleader="ç"
 
+set autoindent
+set noexpandtab    " disable converting between tabs and spaces
 set softtabstop=-1 " for when deleting (-1 to follow shiftwidth)
-set shiftwidth=0 " for autoindent (0 to follow tabstop)
-set tabstop=2 " how many spaces in a tab
-set noexpandtab " converting between tabs and spaces
+set shiftwidth=0   " for autoindent (0 to follow tabstop)
+set tabstop=2      " how many spaces to view a tab as
 
-map <SPACE> <Leader>
-map <Leader>w <C-w>w
-map <Leader>d "_d
-map <Leader>y "*y
+" windows
+nnoremap <leader>j <C-W>j
+nnoremap <leader>k <C-W>k
+nnoremap <leader>h <C-W>h
+nnoremap <leader>l <C-W>l
+nnoremap <leader>+ 10<C-W>+
+nnoremap <leader>- 10<C-W>-
+nnoremap <leader>> 10<C-W>>
+nnoremap <leader>< 10<C-W><
+nnoremap <leader>º <C-W>=
+nnoremap <leader><leader> <C-W>p
 
-let g:go_highlight_trailing_whitespace_error=0
-
-if has('mac')
-	call plug#begin()
-	"let g:seoul256_background = 239
-	Plug 'junegunn/seoul256.vim'
-
-	Plug 'arcticicestudio/nord-vim'
-
-	let g:gruvbox_contrast_dark = 'soft'
-	set bg=dark
-	Plug 'morhetz/gruvbox'
-
-	let $FZF_DEFAULT_OPTS="--bind ctrl-u:preview-page-up,ctrl-d:preview-page-down,ctrl-k:preview-up,ctrl-j:preview-down"
-	Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-	Plug 'junegunn/fzf.vim'
-
-	Plug 'preservim/nerdtree'
-
-	set signcolumn=number
-	Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
-	Plug 'sheerun/vim-polyglot'
-	call plug#end()
-
-	map <Leader>f :Rg<CR>
-	map <Leader>p :Files<CR>
-	map <Leader>b :Buffers<CR>
-
-	map <silent> gd <Plug>(coc-definition)
-	map <silent> gt <Plug>(coc-type-definition)
-	map <silent> gi <Plug>(coc-implementation)
-	map <silent> gr <Plug>(coc-references)
-	map <silent> ep <Plug>(coc-diagnostic-prev)
-	map <silent> en <Plug>(coc-diagnostic-next)
-	map <leader>r <Plug>(coc-rename)
-
-	autocmd CursorHold * silent call CocActionAsync('highlight')
-
-	nnoremap <silent> K :call ShowDocumentation()<CR>
-	autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-
-	" auto complete with tab
-	inoremap <silent><expr> <tab> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<TAB>"
-	inoremap <silent><expr> <cr> "\<c-g>u\<CR>"
-
-	function! ShowDocumentation()
-		if CocAction('hasProvider', 'hover')
-			call CocActionAsync('doHover')
-		else
-			call feedkeys('K', 'in')
-		endif
-	endfunction
-	
-	colorscheme nord
-endif
+" buffers
+set switchbuf+=useopen
+nnoremap <leader>n :sbn<CR>
+nnoremap <leader>pp :sbp<CR>
+nnoremap <leader>a :sb#<CR>
