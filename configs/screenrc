@@ -1,5 +1,7 @@
 startup_message off
 defscrollback 10000
-bindkey "º" command # default Ctrl-A
+bindkey "\\" command # default Ctrl-A
 
-hardstatus alwayslastline '%{= KW} %= %-Lw%n%f%{G}*%{W} %t%+Lw %= '
+set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
+
+hardstatus alwayslastline '%{= KW} %= %-Lw%n%f%{r}*%{W} %t%+Lw %= '

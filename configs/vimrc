@@ -10,7 +10,7 @@ set number
 set ruler
 set nowrap
 set scrolloff=10
-"let g:mapleader="ç"
+let g:mapleader=" "
 
 set autoindent
 set noexpandtab    " disable converting between tabs and spaces
@@ -19,19 +19,20 @@ set shiftwidth=0   " for autoindent (0 to follow tabstop)
 set tabstop=2      " how many spaces to view a tab as
 
 " windows
-nnoremap <leader>j <C-W>j
-nnoremap <leader>k <C-W>k
-nnoremap <leader>h <C-W>h
-nnoremap <leader>l <C-W>l
-nnoremap <leader>+ 10<C-W>+
-nnoremap <leader>- 10<C-W>-
-nnoremap <leader>> 10<C-W>>
-nnoremap <leader>< 10<C-W><
-nnoremap <leader>º <C-W>=
-nnoremap <leader><leader> <C-W>p
+noremap <C-K> <C-W>k
+noremap <C-J> <C-W>j
+noremap <C-H> <C-W>h
+noremap <C-L> <C-W>l
+"noremap <C-P> <C-W>p
+noremap <Up> 10<C-W>+
+noremap <Down> 10<C-W>-
+noremap <Right> 10<C-W>>
+noremap <Left> 10<C-W><
+noremap <C-E> <C-W>=
 
 " buffers
-set switchbuf+=useopen
-nnoremap <leader>n :sbn<CR>
-nnoremap <leader>pp :sbp<CR>
-nnoremap <leader>a :sb#<CR>
+"set switchbuf=useopen
+"nnoremap <C-N> :bn<CR>
+"nnoremap <C-P> :bp<CR>
+nnoremap <C-P> :b#<CR>
+"nnoremap <leader>a :sb#<CR>

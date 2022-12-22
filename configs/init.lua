@@ -1,54 +1,110 @@
 require('packer').startup(function(use)
+	-- packer
 	use 'wbthomason/packer.nvim'
+
+	-- fzf
 	use 'junegunn/fzf'
 	use 'junegunn/fzf.vim'
-	use 'junegunn/seoul256.vim'
+
+	-- lsp
+	use 'neovim/nvim-lspconfig'
+	use 'williamboman/mason.nvim'
+	use 'williamboman/mason-lspconfig.nvim'
 	use {
-		'VonHeikemen/lsp-zero.nvim',
+		'hrsh7th/nvim-cmp',
 		requires = {
-			-- LSP Support
-			{ 'neovim/nvim-lspconfig' },
-			{ 'williamboman/mason.nvim' },
-			{ 'williamboman/mason-lspconfig.nvim' },
-
-			-- Autocompletion
-			{ 'hrsh7th/nvim-cmp' },
-			{ 'hrsh7th/cmp-buffer' },
-			{ 'hrsh7th/cmp-path' },
-			{ 'saadparwaiz1/cmp_luasnip' },
-			{ 'hrsh7th/cmp-nvim-lsp' },
-			{ 'hrsh7th/cmp-nvim-lua' },
-
-			-- Snippets (actually unused but will give off an error if not included)
-			{ 'L3MON4D3/LuaSnip' },
-			{ 'rafamadriz/friendly-snippets' },
+			use 'hrsh7th/cmp-nvim-lsp',
+			use 'hrsh7th/cmp-vsnip',
+			use 'hrsh7th/vim-vsnip',
+			use 'hrsh7th/cmp-path',
+			use 'hrsh7th/cmp-nvim-lsp-signature-help',
 		}
 	}
+
+	-- other
 	use 'preservim/tagbar'
 	use 'preservim/nerdtree'
+	use 'voldikss/vim-floaterm'
+
+	-- appearance
 	use 'arcticicestudio/nord-vim'
+	use 'junegunn/seoul256.vim'
+	use 'sheerun/vim-polyglot'
 end)
 
-local lsp = require('lsp-zero')
-lsp.preset('recommended')
--- remove snippets from suggestions
-lsp.setup_nvim_cmp({
-	sources = {
-		{ name = 'path' },
-		{ name = 'nvim_lsp', keyword_length = 3 },
-		{ name = 'buffer', keyword_length = 3 },
-	}
-})
-lsp.setup()
+require("mason").setup()
+require("mason-lspconfig").setup()
+-- automatically init Mason installed servers
+-- see :h mason-lspconfig-automatic-server-setup
+require("mason-lspconfig").setup_handlers {
+	function(server_name)
+		require("lspconfig")[server_name].setup {
+			on_attach = function(client, bufnr)
+				-- enable autoformatting on save if available
+				if client.supports_method("textDocument/formatting") then
+					vim.cmd("autocmd BufWritePre * lua vim.lsp.buf.format()")
+				end
 
-vim.diagnostic.config({
-	virtual_text = true,
-	signs = true,
-	update_in_insert = true,
-	underline = true,
-	severity_sort = false,
-	float = false,
+				-- setup keybindings
+				local bufopts = { noremap = true, silent = false, buffer = bufnr }
+				vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+				vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+				vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+				vim.keymap.set('n', 'T', vim.lsp.buf.signature_help, bufopts)
+				vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+				vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+				vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
+				vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+
+				-- show diagnostics in insert mode
+				vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+					vim.lsp.diagnostic.on_publish_diagnostics, {
+					update_in_insert = true,
+					underline = false,
+				}
+				)
+			end
+		}
+	end,
+	-- optional overrides
+}
+
+-- completion engine
+local cmp = require("cmp")
+local select_completion = function(down)
+	return cmp.mapping(function(fallback)
+		if cmp.visible() and down then
+			cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+		elseif cmp.visible() and not down then
+			cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+		else
+			fallback()
+		end
+	end, { "i" })
+end
+cmp.setup({
+	snippet = {
+		-- required - you must specify a snippet engine
+		expand = function(args)
+			vim.fn["vsnip#anonymous"](args.body)
+		end,
+	},
+	mapping = cmp.mapping.preset.insert({
+		["<Tab>"] = select_completion(true),
+		["<S-Tab>"] = select_completion(false),
+		['<C-Space>'] = cmp.mapping.complete(),
+		['<C-P>'] = cmp.mapping.abort(),
+		['<CR>'] = cmp.mapping.confirm({ select = true }),
+	}),
+	sources = cmp.config.sources({
+		{ name = 'path' },
+		{ name = 'nvim_lsp' },
+		{ name = 'nvim_lsp_signature_help' },
+	}, {
+		{ name = 'buffer' },
+	}),
 })
+
 vim.cmd([[
 	so ~/.vimrc
 
@@ -68,11 +124,12 @@ vim.cmd([[
 	endfunction
 
 	function! ThemeInit()
-		if system("defaults read -g AppleInterfaceStyle") =~ '^Dark'
-			let g:curr_index = 0
-		else
-			let g:curr_index = 1
-		endif
+		"if system("defaults read -g AppleInterfaceStyle") =~ '^Dark'
+		"	let g:curr_index = 0
+		"else
+		"	let g:curr_index = 1
+		"endif
+		let g:curr_index = 0
 		call ThemeSet()
 	endfunction
 
@@ -99,23 +156,26 @@ vim.cmd([[
 	" fix 'set -o vi' conflict
 	tnoremap <Esc><Esc> <C-\><C-N>
 
+	" FZF
 	" use universal-ctags
 	let g:fzf_tags_command = 'uctags -R'
 	nnoremap <leader>b :Buffers<CR>
 	nnoremap <leader>f :Files<CR>
-	nnoremap <leader>t :Tags<CR>
-	nnoremap <leader>r :Rg<CR>
-	" fix floating window esc delay
-	tnoremap <leader>g <C-G>
-	tnoremap <leader>v <C-V>
-	tnoremap <leader>x <C-X>
+	nnoremap <leader>g :Rg<CR>
+
+	" Nerdtree
+	nnoremap <leader>q :call NERDTreeToggleAndRefresh()<CR>
+	function! NERDTreeToggleAndRefresh()
+		:NERDTreeToggle
+		if g:NERDTree.IsOpen()
+			:NERDTreeRefreshRoot
+		endif
+	endfunction
 
 	" Tagbar
 	nnoremap <leader>w :TagbarToggle f<CR>
 
-	" Nerdtree
-	nnoremap <leader>q :NERDTreeToggle<CR>
-
-	" format on save
-	autocmd BufWritePre * lua vim.lsp.buf.format()
+	" Floatterm
+	tnoremap § <C-\><C-n>:FloatermToggle<CR>
+	nnoremap § <C-\><C-n>:FloatermToggle<CR>
 ]])
