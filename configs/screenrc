@@ -1,6 +1,6 @@
 startup_message off
 defscrollback 10000
-bindkey "\\" command # default Ctrl-A
+bindkey "§" command # default Ctrl-A
 
 set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
 

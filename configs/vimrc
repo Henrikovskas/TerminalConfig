@@ -6,6 +6,7 @@ set backspace=indent,eol,start
 set mouse=a
 set hlsearch
 set incsearch
+set ignorecase
 set number
 set ruler
 set nowrap
@@ -23,16 +24,14 @@ noremap <C-K> <C-W>k
 noremap <C-J> <C-W>j
 noremap <C-H> <C-W>h
 noremap <C-L> <C-W>l
-"noremap <C-P> <C-W>p
-noremap <Up> 10<C-W>+
-noremap <Down> 10<C-W>-
-noremap <Right> 10<C-W>>
-noremap <Left> 10<C-W><
 noremap <C-E> <C-W>=
+noremap <leader>+ 10<C-W>+
+noremap <leader>- 10<C-W>-
+noremap <leader>> 10<C-W>>
+noremap <leader>< 10<C-W><
 
 " buffers
 "set switchbuf=useopen
-"nnoremap <C-N> :bn<CR>
-"nnoremap <C-P> :bp<CR>
-nnoremap <C-P> :b#<CR>
-"nnoremap <leader>a :sb#<CR>
+nnoremap <C-N> :bn<CR> " next
+nnoremap <C-P> :bp<CR> " previous
+nnoremap <C-L> :b#<CR> " last

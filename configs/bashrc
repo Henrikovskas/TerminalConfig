@@ -3,6 +3,8 @@ set -o vi
 alias ls="ls --color"
 alias py="python3"
 alias vi="nvim"
+alias clipped="clipped -embed=true"
+export PATH=/Users/home/projects/clipped:$PATH
 
 source ~/.git-prompt.sh
 export PS1="\[\033[36;1m\]\W\$(__git_ps1) \$\[\033[0m\] "
